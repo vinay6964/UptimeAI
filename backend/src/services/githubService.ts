@@ -11,7 +11,7 @@ const client = new GraphQLClient(GITHUB_ENDPOINT, {
   },
 });
 
-// 1. Query for Regular Users (Includes Contribution Graph)
+// 1. Query for Users: Gets Profile, Contributions, AND Top 6 Popular Repos
 const GET_USER_DATA = gql`
   query getUserData($username: String!) {
     user(login: $username) {
@@ -25,17 +25,19 @@ const GET_USER_DATA = gql`
       twitterUsername
       followers { totalCount }
       following { totalCount }
-      pinnedItems(first: 6, types: REPOSITORY) {
+      
+      # FETCH POPULAR REPOS (Sorted by Stars)
+      repositories(first: 6, ownerAffiliations: OWNER, orderBy: {field: STARGAZERS, direction: DESC}) {
         nodes {
-          ... on Repository {
-            name
-            description
-            stargazerCount
-            primaryLanguage { name color }
-            url
-          }
+          name
+          description
+          stargazerCount
+          primaryLanguage { name color }
+          url
         }
       }
+
+      # Contribution Graph
       contributionsCollection {
         contributionCalendar {
           totalContributions
@@ -52,7 +54,7 @@ const GET_USER_DATA = gql`
   }
 `;
 
-// 2. Query for Organizations (No Contributions, different Followers field)
+// 2. Query for Organizations: Gets Profile AND Top 6 Popular Repos
 const GET_ORG_DATA = gql`
   query getOrgData($username: String!) {
     organization(login: $username) {
@@ -64,16 +66,16 @@ const GET_ORG_DATA = gql`
       email
       websiteUrl
       twitterUsername
-      membersWithRole { totalCount } # Orgs use 'members' instead of followers
-      pinnedItems(first: 6, types: REPOSITORY) {
+      membersWithRole { totalCount }
+      
+      # FETCH POPULAR REPOS (Sorted by Stars)
+      repositories(first: 6, orderBy: {field: STARGAZERS, direction: DESC}) {
         nodes {
-          ... on Repository {
-            name
-            description
-            stargazerCount
-            primaryLanguage { name color }
-            url
-          }
+          name
+          description
+          stargazerCount
+          primaryLanguage { name color }
+          url
         }
       }
     }
@@ -98,7 +100,7 @@ export const fetchGitHubProfile = async (username: string) => {
 
     // ATTEMPT 2: Try to fetch as an ORGANIZATION
     const orgData: any = await client.request(GET_ORG_DATA, { username });
-    
+
     if (orgData.organization) {
       // Map the Org data to look like a User so the Frontend doesn't break
       return {

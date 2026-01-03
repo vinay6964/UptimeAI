@@ -39,9 +39,10 @@ export class ContributionGraphComponent implements OnChanges {
     this.chartOption = {
       tooltip: {
         position: 'top',
+        confine: true,
         padding: [5, 10],
-        backgroundColor: '#2b3137', // GitHub Tooltip Dark
-        borderColor: '#2b3137',
+        backgroundColor: '#6e7681',
+        borderColor: '#6e7681',
         textStyle: { color: '#ffffff' },
         formatter: (params: any) => {
           const date = new Date(params.data[0]);
@@ -56,45 +57,50 @@ export class ContributionGraphComponent implements OnChanges {
         max: 10,
         type: 'piecewise',
         orient: 'horizontal',
-        right: 0,      // Align legend to the right
-        bottom: 0,     // Stick to bottom
-        itemWidth: 10, // Small squares for legend
+        right: 0,
+        bottom: 0,
+        itemWidth: 10,
         itemHeight: 10,
-        text: ['More', 'Less'], // Text on ends
+        text: ['More', 'Less'],
         textGap: 5,
+        textStyle: { color: '#768390', fontSize: 10 },
         pieces: [
-           { min: 10, color: '#216e39' }, 
-           { min: 7, max: 9, color: '#30a14e' },
-           { min: 4, max: 6, color: '#40c463' },
-           { min: 1, max: 3, color: '#9be9a8' },
-           { value: 0, color: '#ebedf0' }
-        ],
-        textStyle: { color: '#768390', fontSize: 12 } 
+           { min: 10, color: '#39d353' }, 
+           { min: 7, max: 9, color: '#26a641' }, 
+           { min: 4, max: 6, color: '#006d32' }, 
+           { min: 1, max: 3, color: '#0e4429' }, 
+           { value: 0, color: '#161b22' } 
+        ]
       },
       calendar: {
-        top: 20,    // Reduce top gap
-        left: 30,   // Space for Day labels
-        right: 5,
-        bottom: 25,
-        cellSize: [11, 11], // Exact GitHub square size
+        top: 25,     
+        left: 30,    
+        right: 5,     
+        bottom: 25,   
+        
+        // 1. INCREASE TOTAL CELL SIZE
+        // 10px box + 4px total gap = 14px
+        cellSize: [14, 14], 
+
         range: [startDate, endDate],
         itemStyle: {
-          borderWidth: 2,      // Gap between squares
-          borderColor: '#0d1117' // Match your background color (hidden gap)
+          color: 'transparent', 
+          borderWidth: 0, 
+          borderColor: 'transparent'
         },
-        splitLine: { show: false }, // Remove month divider lines
+        splitLine: { show: false },
         yearLabel: { show: false },
         dayLabel: {
-          firstDay: 1, // Start Monday
-          nameMap: ['', 'Mon', '', 'Wed', '', 'Fri', ''], // GitHub style: only Mon/Wed/Fri
+          firstDay: 1, 
+          nameMap: ['', 'Mon', '', 'Wed', '', 'Fri', ''], 
           color: '#768390',
-          fontSize: 10,
+          fontSize: 9,
           margin: 5
         },
         monthLabel: {
           color: '#768390',
-          fontSize: 10,
-          position: 'start', // Align month text to start of month
+          fontSize: 9,
+          position: 'start',
           margin: 5
         }
       },
@@ -103,7 +109,12 @@ export class ContributionGraphComponent implements OnChanges {
         coordinateSystem: 'calendar',
         data: data,
         itemStyle: {
-          borderRadius: 2 // Tiny rounding like GitHub
+          // 2. INCREASE GAP (Border Width)
+          // A 2px border creates a 4px gap between two boxes
+          borderColor: '#0d1117', 
+          borderWidth: 2, 
+          
+          borderRadius: 2
         }
       }
     };
