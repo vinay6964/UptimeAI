@@ -11,6 +11,9 @@ import { GithubService } from '../../../core/github.service';
 })
 export class HeaderComponent {
   
+  searchFocused: boolean = false;
+  searchValue: string = '';
+
   // Inject the service
   constructor(private githubService: GithubService) {}
 
@@ -19,7 +22,29 @@ export class HeaderComponent {
     const value = event.target.value;
     if (value) {
       this.githubService.triggerSearch(value);
+      this.searchValue = ''; // Clear after search if desired, or keep it.
+      // event.target.value = ''; // We are binding to searchValue, so clear that instead if using ngModel, but here we use manual binding.
+      // Let's keep manual clearing for now as per original code, but update local state.
       event.target.value = '';
+      this.searchValue = '';
+      event.target.blur(); // Remove focus
+      this.searchFocused = false;
     }
+  }
+
+  onFocus() {
+    this.searchFocused = true;
+  }
+
+  onBlur() {
+    // Small delay to allow click events if needed, but for simple focus/blur it's fine.
+    // If the input is empty, show the placeholder again.
+    if (!this.searchValue) {
+      this.searchFocused = false;
+    }
+  }
+
+  onInput(event: any) {
+    this.searchValue = event.target.value;
   }
 }

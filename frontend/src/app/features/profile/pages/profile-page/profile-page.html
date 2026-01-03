@@ -2,7 +2,11 @@
     <div
         class="max-w-[1280px] mx-auto px-4 md:px-6 flex items-center gap-6 overflow-x-auto whitespace-nowrap text-sm no-scrollbar">
 
-        <a href="#" class="flex items-center gap-2 py-3 border-b-2 border-[#f78166] font-semibold text-gh-text">
+        <a href="#" (click)="setActiveTab('overview'); $event.preventDefault()"
+            [class.border-[#f78166]]="activeTab === 'overview'" [class.font-semibold]="activeTab === 'overview'"
+            [class.text-gh-text]="activeTab === 'overview'" [class.border-transparent]="activeTab !== 'overview'"
+            [class.text-gh-text-secondary]="activeTab !== 'overview'"
+            class="flex items-center gap-2 py-3 border-b-2 hover:border-gh-border transition-colors">
             <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                 class="fill-current text-gh-text-secondary">
                 <path
@@ -12,8 +16,12 @@
             Overview
         </a>
 
-        <a href="#"
-            class="flex items-center gap-2 py-3 border-b-2 border-transparent hover:border-gh-border text-gh-text-secondary transition-colors">
+        <a href="#" (click)="setActiveTab('repositories'); $event.preventDefault()"
+            [class.border-[#f78166]]="activeTab === 'repositories'" [class.font-semibold]="activeTab === 'repositories'"
+            [class.text-gh-text]="activeTab === 'repositories'"
+            [class.border-transparent]="activeTab !== 'repositories'"
+            [class.text-gh-text-secondary]="activeTab !== 'repositories'"
+            class="flex items-center gap-2 py-3 border-b-2 hover:border-gh-border transition-colors">
             <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                 class="fill-current text-gh-text-secondary">
                 <path
@@ -26,8 +34,11 @@
             </span>
         </a>
 
-        <a href="#"
-            class="flex items-center gap-2 py-3 border-b-2 border-transparent hover:border-gh-border text-gh-text-secondary transition-colors">
+        <a href="#" (click)="setActiveTab('projects'); $event.preventDefault()"
+            [class.border-[#f78166]]="activeTab === 'projects'" [class.font-semibold]="activeTab === 'projects'"
+            [class.text-gh-text]="activeTab === 'projects'" [class.border-transparent]="activeTab !== 'projects'"
+            [class.text-gh-text-secondary]="activeTab !== 'projects'"
+            class="flex items-center gap-2 py-3 border-b-2 hover:border-gh-border transition-colors">
             <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                 class="fill-current text-gh-text-secondary">
                 <path
@@ -37,8 +48,25 @@
             Projects
         </a>
 
-        <a href="#"
-            class="flex items-center gap-2 py-3 border-b-2 border-transparent hover:border-gh-border text-gh-text-secondary transition-colors">
+        <a href="#" (click)="setActiveTab('packages'); $event.preventDefault()"
+            [class.border-[#f78166]]="activeTab === 'packages'" [class.font-semibold]="activeTab === 'packages'"
+            [class.text-gh-text]="activeTab === 'packages'" [class.border-transparent]="activeTab !== 'packages'"
+            [class.text-gh-text-secondary]="activeTab !== 'packages'"
+            class="flex items-center gap-2 py-3 border-b-2 hover:border-gh-border transition-colors">
+            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
+                class="fill-current text-gh-text-secondary">
+                <path
+                    d="M8.878.392a1.75 1.75 0 0 0-1.756 0l-5.25 3.045A1.75 1.75 0 0 0 1 4.951v6.098c0 .624.332 1.2.872 1.514l5.25 3.045a1.75 1.75 0 0 0 1.756 0l5.25-3.045c.54-.313.872-.89.872-1.514V4.951c0-.624-.332-1.2-.872-1.514L8.878.392ZM7.875 1.69a.25.25 0 0 1 .25 0l4.63 2.685L8 7.133 3.245 4.375l4.63-2.685ZM2.5 5.677l4.75 2.755v5.516l-4.63-2.685a.25.25 0 0 1-.12-.216V5.677Zm6.25 8.271V8.432l4.75-2.755v5.422a.25.25 0 0 1-.12.216l-4.63 2.685Z">
+                </path>
+            </svg>
+            Packages
+        </a>
+
+        <a href="#" (click)="setActiveTab('stars'); $event.preventDefault()"
+            [class.border-[#f78166]]="activeTab === 'stars'" [class.font-semibold]="activeTab === 'stars'"
+            [class.text-gh-text]="activeTab === 'stars'" [class.border-transparent]="activeTab !== 'stars'"
+            [class.text-gh-text-secondary]="activeTab !== 'stars'"
+            class="flex items-center gap-2 py-3 border-b-2 hover:border-gh-border transition-colors">
             <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"
                 class="fill-current text-gh-text-secondary">
                 <path
@@ -82,24 +110,41 @@
 
         <main class="md:col-span-8 lg:col-span-9">
 
-            <div class="flex items-end justify-between mb-4">
-                <h3 class="text-[16px] font-normal text-gh-text">Popular repositories</h3>
-                <a href="#" class="text-xs text-gh-text-secondary hover:text-gh-link">Customize your pins</a>
-            </div>
-
-            <app-repo-list *ngIf="profileData?.repositories?.nodes?.length" [repos]="profileData.repositories.nodes">
-            </app-repo-list>
-
-            <div *ngIf="!profileData?.repositories?.nodes?.length"
-                class="text-gh-text-secondary text-sm border border-gh-border rounded p-4 bg-gh-bg text-center">
-                User has no public repositories.
-            </div>
-
-            <div class="overflow-x-auto pb-4">
-                <div class="min-w-[700px]"> <app-contribution-graph *ngIf="profileData?.contributionsCollection"
-                        [calendar]="profileData.contributionsCollection.contributionCalendar">
-                    </app-contribution-graph>
+            <ng-container *ngIf="activeTab === 'overview'">
+                <div class="flex items-end justify-between mb-4">
+                    <h3 class="text-[16px] font-normal text-gh-text">Popular repositories</h3>
+                    <a href="#" class="text-xs text-gh-text-secondary hover:text-gh-link">Customize your pins</a>
                 </div>
+
+                <app-repo-list *ngIf="profileData?.repositories?.nodes?.length"
+                    [repos]="profileData.repositories.nodes">
+                </app-repo-list>
+
+                <div *ngIf="!profileData?.repositories?.nodes?.length"
+                    class="text-gh-text-secondary text-sm border border-gh-border rounded p-4 bg-gh-bg text-center">
+                    User has no public repositories.
+                </div>
+
+                <div class="overflow-x-auto pb-4">
+                    <div class="min-w-[700px]"> <app-contribution-graph *ngIf="profileData?.contributionsCollection"
+                            [calendar]="profileData.contributionsCollection.contributionCalendar">
+                        </app-contribution-graph>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Placeholders for other tabs as per assignment -->
+            <div *ngIf="activeTab === 'repositories'" class="text-gh-text-secondary text-center py-10">
+                Repositories content (Placeholder)
+            </div>
+            <div *ngIf="activeTab === 'projects'" class="text-gh-text-secondary text-center py-10">
+                Projects content (Placeholder)
+            </div>
+            <div *ngIf="activeTab === 'packages'" class="text-gh-text-secondary text-center py-10">
+                Packages content (Placeholder)
+            </div>
+            <div *ngIf="activeTab === 'stars'" class="text-gh-text-secondary text-center py-10">
+                Stars content (Placeholder)
             </div>
 
         </main>

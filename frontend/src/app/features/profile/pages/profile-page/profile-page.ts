@@ -19,6 +19,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   profileData: any = null;
   loading: boolean = true;
   error: string | null = null;
+  activeTab: string = 'overview';
   private searchSubscription!: Subscription;
 
   // 2. Inject ChangeDetectorRef here
@@ -29,7 +30,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchProfile('shreeramk');
-  
+
     this.searchSubscription = this.githubService.search$.subscribe((username) => {
       console.log('3. Profile Page: Received search event!', username); // <--- ADD THIS
       this.fetchProfile(username);
@@ -40,6 +41,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
+  }
+
+  setActiveTab(tab: string) {
+    this.activeTab = tab;
   }
 
   fetchProfile(username: string) {
@@ -53,6 +58,26 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           console.log('API Success:', data);
+
+          // MOCK ACHIEVEMENTS (Since API doesn't return them easily)
+          // We attach them to the profile object dynamically
+          data.achievements = [
+            {
+              name: 'Pull Shark',
+              image: 'https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png'
+            },
+            {
+              name: 'YOLO',
+              image: 'https://github.githubassets.com/images/modules/profile/achievements/yolo-default.png'
+            },
+            {
+              name: 'Quickdraw',
+              image: 'https://github.githubassets.com/images/modules/profile/achievements/quickdraw-default.png',
+              badge: 'x4',
+              badgeColor: 'bg-blue-500'
+            }
+          ];
+
           this.profileData = data;
           this.cdr.detectChanges();
         },

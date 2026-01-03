@@ -78,9 +78,7 @@ export class ContributionGraphComponent implements OnChanges {
         right: 5,     
         bottom: 25,   
         
-        // 1. INCREASE TOTAL CELL SIZE
-        // 10px box + 4px total gap = 14px
-        cellSize: [14, 14], 
+        cellSize: [12, 12], 
 
         range: [startDate, endDate],
         itemStyle: {
@@ -109,11 +107,8 @@ export class ContributionGraphComponent implements OnChanges {
         coordinateSystem: 'calendar',
         data: data,
         itemStyle: {
-          // 2. INCREASE GAP (Border Width)
-          // A 2px border creates a 4px gap between two boxes
           borderColor: '#0d1117', 
           borderWidth: 2, 
-          
           borderRadius: 2
         }
       }
