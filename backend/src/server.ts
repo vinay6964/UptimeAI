@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
+import githubRoutes from './routes/githubRoutes';
 
 // 1. Config
 dotenv.config();
@@ -31,6 +32,8 @@ const connectDB = async () => {
 app.get('/', (req: Request, res: Response) => {
     res.send('API is running...');
 });
+
+app.use('/api/user', githubRoutes);
 
 // 5. Start Server
 const start = async () => {

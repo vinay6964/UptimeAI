@@ -1,0 +1,42 @@
+<div class="max-w-[1280px] mx-auto px-4 md:px-6 py-8">
+  
+    <div *ngIf="loading" class="text-white text-center mt-10">
+      Loading Profile...
+    </div>
+  
+    <div *ngIf="error" class="text-red-500 text-center mt-10">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      
+      <aside class="md:col-span-4 lg:col-span-3 -mt-4 md:-mt-8 relative z-10">
+        <app-user-profile [profile]="profileData"></app-user-profile>
+      </aside>
+  
+      <main class="md:col-span-8 lg:col-span-9">
+    
+        <h3 class="text-lg font-medium text-gh-text mb-4">Pinned Repositories</h3>
+        
+        <app-repo-list 
+            *ngIf="profileData?.pinnedItems?.nodes?.length" 
+            [repos]="profileData.pinnedItems.nodes">
+        </app-repo-list>
+    
+        <div *ngIf="!profileData?.pinnedItems?.nodes?.length" class="text-gh-text-secondary">
+            User has no pinned repositories.
+        </div>
+    
+    </main>
+
+    <main class="md:col-span-8 lg:col-span-9">
+
+        <app-contribution-graph 
+            *ngIf="profileData?.contributionsCollection"
+            [calendar]="profileData.contributionsCollection.contributionCalendar">
+        </app-contribution-graph>
+    
+    </main>
+  
+    </div>
+  </div>
