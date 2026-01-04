@@ -66,7 +66,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         },
         error: (err) => {
           console.error('API Error:', err);
-          this.error = 'Failed to load profile';
+          this.error = 'Failed to load profile, Network error';
           this.cdr.detectChanges();
         }
       });

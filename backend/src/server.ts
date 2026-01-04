@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 // 2. Middleware
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors());
 app.use(helmet());
 
 // 3. Database Connection

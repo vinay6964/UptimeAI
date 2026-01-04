@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, BehaviorSubject } from 'rxjs'; // <--- Import BehaviorSubject
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GithubService {
-  private apiUrl = 'http://localhost:5001/api/user';
+  private apiUrl = environment.apiUrl;
 
   // 1. Create a "Search Channel"
   private searchSubject = new Subject<string>();
