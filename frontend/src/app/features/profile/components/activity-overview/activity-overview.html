@@ -1,0 +1,33 @@
+<div *ngIf="stats" class="border border-gh-border rounded-md bg-gh-bg p-4 mt-6">
+    <h3 class="text-[16px] font-normal text-gh-text mb-6">Activity overview</h3>
+
+    <div class="w-full h-[300px] flex items-center justify-center">
+        <svg viewBox="0 0 400 300" class="w-full h-full max-w-[500px]">
+            <line x1="200" y1="50" x2="200" y2="250" stroke="#30363d" stroke-width="1" />
+            <line x1="100" y1="150" x2="300" y2="150" stroke="#30363d" stroke-width="1" />
+
+            <!-- Labels -->
+            <text x="200" y="30" text-anchor="middle" fill="#7d8590" font-size="12">Code review</text>
+            <text x="310" y="154" text-anchor="start" fill="#7d8590" font-size="12">Issues</text>
+            <text x="200" y="270" text-anchor="middle" fill="#7d8590" font-size="12">Pull requests</text>
+            <text x="90" y="154" text-anchor="end" fill="#7d8590" font-size="12">Commits</text>
+
+            <!-- Percentage Labels (Example logic) -->
+            <text x="90" y="135" text-anchor="end" fill="#e6edf3" font-size="12">{{
+                getPercentage(stats.totalCommitContributions) }}%</text>
+            <polygon [attr.points]="getPolygonPoints()" fill="rgba(46, 160, 67, 0.2)" stroke="#3fb950"
+                stroke-width="2" />
+
+            <!-- Dots -->
+            <circle [attr.cx]="getPoint(0).x" [attr.cy]="getPoint(0).y" r="3" fill="#ffffff" stroke="#3fb950"
+                stroke-width="1" /> <!-- Top (Review) -->
+            <circle [attr.cx]="getPoint(1).x" [attr.cy]="getPoint(1).y" r="3" fill="#ffffff" stroke="#3fb950"
+                stroke-width="1" /> <!-- Right (Issues) -->
+            <circle [attr.cx]="getPoint(2).x" [attr.cy]="getPoint(2).y" r="3" fill="#ffffff" stroke="#3fb950"
+                stroke-width="1" /> <!-- Bottom (PRs) -->
+            <circle [attr.cx]="getPoint(3).x" [attr.cy]="getPoint(3).y" r="3" fill="#ffffff" stroke="#3fb950"
+                stroke-width="1" /> <!-- Left (Commits) -->
+
+        </svg>
+    </div>
+</div>

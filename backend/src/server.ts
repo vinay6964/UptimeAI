@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 5000;
 
 // 2. Middleware
 app.use(express.json());
-// Allow requests from our future Angular app (usually port 4200)
 app.use(cors({ origin: 'http://localhost:4200' }));
 app.use(helmet());
 

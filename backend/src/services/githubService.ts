@@ -39,6 +39,10 @@ const GET_USER_DATA = gql`
 
       # Contribution Graph
       contributionsCollection {
+        totalCommitContributions
+        totalIssueContributions
+        totalPullRequestContributions
+        totalPullRequestReviewContributions
         contributionCalendar {
           totalContributions
           weeks {
@@ -85,7 +89,6 @@ const GET_ORG_DATA = gql`
 export const fetchGitHubProfile = async (username: string) => {
   try {
     // ATTEMPT 1: Try to fetch as a USER
-    // We expect this to throw an error or return null if it's an Organization
     try {
       const userData: any = await client.request(GET_USER_DATA, { username });
       if (userData.user) {
@@ -93,7 +96,6 @@ export const fetchGitHubProfile = async (username: string) => {
       }
     } catch (err) {
       // Ignore error here and proceed to try Organization
-      // GraphQL often throws an error if the type doesn't match
     }
 
     console.log(`User '${username}' not found or type mismatch. Trying as Organization...`);
@@ -102,7 +104,6 @@ export const fetchGitHubProfile = async (username: string) => {
     const orgData: any = await client.request(GET_ORG_DATA, { username });
 
     if (orgData.organization) {
-      // Map the Org data to look like a User so the Frontend doesn't break
       return {
         ...orgData.organization,
         followers: { totalCount: orgData.organization.membersWithRole?.totalCount || 0 },
@@ -110,12 +111,10 @@ export const fetchGitHubProfile = async (username: string) => {
         contributionsCollection: null // Orgs don't have the graph
       };
     }
-
-    // If we reach here, neither was found
     return null;
 
-  } catch (error) {
-    console.error('GitHub API Service Error:', error);
+  } catch (error: any) {
+    console.error('GitHub API Service Error:', error?.response?.errors || error.message);
     throw error;
   }
 };

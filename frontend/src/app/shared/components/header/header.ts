@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core'; // <--- Import EventEmitter & Output
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <--- Import CDR
 import { CommonModule } from '@angular/common';
 import { GithubService } from '../../../core/github.service';
 
@@ -9,25 +9,33 @@ import { GithubService } from '../../../core/github.service';
   templateUrl: './header.html',
   styleUrls: ['./header.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   
   searchFocused: boolean = false;
   searchValue: string = '';
+  currentUser: any = null; 
 
   // Inject the service
-  constructor(private githubService: GithubService) {}
+  constructor(
+    private githubService: GithubService,
+    private cdr: ChangeDetectorRef // <--- Inject CDR
+  ) {}
+
+  ngOnInit() {
+    // Subscribe to current user updates
+    this.githubService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      this.cdr.detectChanges(); // Force update to ensure avatar/name renders immediately
+    });
+  }
 
   onSearch(event: any) {
-    console.log('1. Header: Enter pressed!', event.target.value); // <--- ADD THIS
     const value = event.target.value;
     if (value) {
       this.githubService.triggerSearch(value);
-      this.searchValue = ''; // Clear after search if desired, or keep it.
-      // event.target.value = ''; // We are binding to searchValue, so clear that instead if using ngModel, but here we use manual binding.
-      // Let's keep manual clearing for now as per original code, but update local state.
-      event.target.value = '';
-      this.searchValue = '';
-      event.target.blur(); // Remove focus
+      this.searchValue = ''; // Clear internal state
+      event.target.value = ''; // Clear input visual
+      event.target.blur(); // Remove focus to hide keyboard on mobile
       this.searchFocused = false;
     }
   }

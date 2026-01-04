@@ -1,23 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs'; // <--- Import Subject
+import { Observable, Subject, BehaviorSubject } from 'rxjs'; // <--- Import BehaviorSubject
 
 @Injectable({
   providedIn: 'root'
 })
 export class GithubService {
   private apiUrl = 'http://localhost:5001/api/user';
-  
+
   // 1. Create a "Search Channel"
   private searchSubject = new Subject<string>();
   search$ = this.searchSubject.asObservable();
 
+  // 2. Create a "Current User Channel" to share profile data with Header
+  private currentUserSubject = new BehaviorSubject<any>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
+
   constructor(private http: HttpClient) { }
 
-  // 2. Method for the Header to call
+  // 3. Method for the Header to call
   triggerSearch(username: string) {
-    console.log('2. Service: transmitting search for', username); // <--- ADD THIS
     this.searchSubject.next(username);
+  }
+
+  // 4. Update the current user state
+  updateCurrentUser(profile: any) {
+    this.currentUserSubject.next(profile);
   }
 
   getProfile(username: string): Observable<any> {

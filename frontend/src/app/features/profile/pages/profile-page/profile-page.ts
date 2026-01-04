@@ -6,11 +6,12 @@ import { finalize } from 'rxjs/operators';
 import { RepoListComponent } from '../../components/repo-list/repo-list';
 import { Subscription } from 'rxjs';
 import { ContributionGraphComponent } from '../../components/contribution-graph/contribution-graph';
+import { ActivityOverviewComponent } from '../../components/activity-overview/activity-overview';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, UserProfileComponent, RepoListComponent, ContributionGraphComponent],
+  imports: [CommonModule, UserProfileComponent, RepoListComponent, ContributionGraphComponent, ActivityOverviewComponent],
   templateUrl: './profile-page.html',
   styleUrls: ['./profile-page.scss']
 })
@@ -32,7 +33,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.fetchProfile('shreeramk');
 
     this.searchSubscription = this.githubService.search$.subscribe((username) => {
-      console.log('3. Profile Page: Received search event!', username); // <--- ADD THIS
       this.fetchProfile(username);
     });
   }
@@ -57,28 +57,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       }))
       .subscribe({
         next: (data) => {
-          console.log('API Success:', data);
-
-          // MOCK ACHIEVEMENTS (Since API doesn't return them easily)
-          // We attach them to the profile object dynamically
-          data.achievements = [
-            {
-              name: 'Pull Shark',
-              image: 'https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png'
-            },
-            {
-              name: 'YOLO',
-              image: 'https://github.githubassets.com/images/modules/profile/achievements/yolo-default.png'
-            },
-            {
-              name: 'Quickdraw',
-              image: 'https://github.githubassets.com/images/modules/profile/achievements/quickdraw-default.png',
-              badge: 'x4',
-              badgeColor: 'bg-blue-500'
-            }
-          ];
+          // Mock Achievements (API doesn't provide these easily, so we mock them for display)
+          data.achievements = this.getMockAchievements();
 
           this.profileData = data;
+          this.githubService.updateCurrentUser(data);
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -87,5 +70,24 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  private getMockAchievements() {
+    return [
+      {
+        name: 'Pull Shark',
+        image: 'https://github.githubassets.com/images/modules/profile/achievements/pull-shark-default.png'
+      },
+      {
+        name: 'YOLO',
+        image: 'https://github.githubassets.com/images/modules/profile/achievements/yolo-default.png'
+      },
+      {
+        name: 'Quickdraw',
+        image: 'https://github.githubassets.com/images/modules/profile/achievements/quickdraw-default.png',
+        badge: 'x4',
+        badgeColor: 'bg-blue-500'
+      }
+    ];
   }
 }

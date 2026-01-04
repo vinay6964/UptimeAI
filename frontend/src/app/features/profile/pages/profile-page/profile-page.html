@@ -131,6 +131,10 @@
                         </app-contribution-graph>
                     </div>
                 </div>
+
+                <app-activity-overview *ngIf="profileData?.contributionsCollection"
+                    [stats]="profileData.contributionsCollection">
+                </app-activity-overview>
             </ng-container>
 
             <!-- Placeholders for other tabs as per assignment -->
