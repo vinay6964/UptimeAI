@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://uptimeai.onrender.com/api/user' 
-  };
+    apiUrl: 'https://uptimeai-iv9b.onrender.com/api/user'
+};
