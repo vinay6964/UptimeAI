@@ -13,9 +13,12 @@ const PORT = process.env.PORT || 5000;
 // 2. Middleware
 app.use(express.json());
 
-// Allow requests from anywhere (for now). 
-// Once deployed, you could restrict this to your Vercel URL for extra security.
-app.use(cors()); 
+// Allow requests from local development and deployed frontend
+app.use(cors({
+    origin: ['http://localhost:4200', 'https://uptime-ai-delta.vercel.app'],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true
+})); 
 
 app.use(helmet());
 
